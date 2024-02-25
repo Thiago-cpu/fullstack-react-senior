@@ -1,88 +1,55 @@
-import {
-  type ChangeEventHandler,
-  useId,
-  useState,
-  type ChangeEvent,
-  useEffect,
-} from "react";
+import { useState, type ChangeEvent } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import { CheckboxGroup } from "./components/checkbox-group";
+import { Checkbox } from "./components/checkbox";
 
-interface CheckboxProps {
-  label: string;
-  checked?: boolean;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
-}
-
-function Checkbox({ label, checked, onChange }: CheckboxProps) {
-  const id = useId();
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-      <input onChange={onChange} type="checkbox" checked={checked} id={id} />
-      <label htmlFor={id}>{label}</label>
-    </div>
-  );
-}
-
-interface CheckboxGroupProps {
-  items: CheckboxProps[];
-}
-
-function CheckboxGroup({ items }: CheckboxGroupProps) {
-  const [itemsValues, setItemsValues] = useState<CheckboxProps[]>(
-    items.map((item) => ({ ...item, checked: false }))
-  );
-
-  const handleItemChange =
-    (indexToChange: number) => (e: ChangeEvent<HTMLInputElement>) => {
-      setItemsValues((prev) => {
-        return prev.map((prevItem, i) => ({
-          ...prevItem,
-          checked: i === indexToChange ? e.target.checked : prevItem.checked,
-        }));
-      });
-    };
+const countries = [
+  {
+    value: "india",
+    label: "India",
+  },
+  {
+    value: "usa",
+    label: "USA",
+  },
+  {
+    value: "france",
+    label: "France",
+  },
+];
+function App() {
+  const [countriesSelected, setCountriesSelected] = useState(["india"]);
 
   const handleSelectAllChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setItemsValues((prev) => {
-      return prev.map((item) => ({ ...item, checked: e.target.checked }));
-    });
+    if (e.target.checked) {
+      setCountriesSelected(countries.map((c) => c.value));
+    } else {
+      setCountriesSelected([]);
+    }
   };
-
-  useEffect(() => {
-    setItemsValues(items.map((item) => ({ ...item, checked: false })));
-  }, [items]);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <Checkbox
-        checked={itemsValues.every((item) => item.checked)}
-        onChange={handleSelectAllChange}
-        label="Select All"
-      />
-      {itemsValues.map((item, i) => (
-        <Checkbox
-          onChange={handleItemChange(i)}
-          key={`${item.label}-${i}`}
-          {...item}
-        />
-      ))}
-    </div>
-  );
-}
-
-function App() {
-  const countries = ["India", "USA", "France"];
-  const countriesCheckboxItems = countries.map((country) => ({
-    label: country,
-  }));
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <CheckboxGroup items={countriesCheckboxItems} />
       </header>
+      <CheckboxGroup
+        value={countriesSelected}
+        onValueChange={setCountriesSelected}
+      >
+        <Checkbox
+          checked={countriesSelected.length === 3}
+          onChange={handleSelectAllChange}
+        >
+          Select All
+        </Checkbox>
+        {countries.map(({ value, label }) => (
+          <Checkbox key={value} value={value}>
+            {label}
+          </Checkbox>
+        ))}
+      </CheckboxGroup>
     </div>
   );
 }
