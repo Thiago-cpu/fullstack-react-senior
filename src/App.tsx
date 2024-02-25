@@ -19,7 +19,7 @@ const countries = [
   },
 ];
 function App() {
-  const [countriesSelected, setCountriesSelected] = useState(["india"]);
+  const [countriesSelected, setCountriesSelected] = useState<string[]>([]);
 
   const handleSelectAllChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -33,23 +33,25 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-      </header>
-      <CheckboxGroup
-        value={countriesSelected}
-        onValueChange={setCountriesSelected}
-      >
-        <Checkbox
-          checked={countriesSelected.length === 3}
-          onChange={handleSelectAllChange}
-        >
-          Select All
-        </Checkbox>
-        {countries.map(({ value, label }) => (
-          <Checkbox key={value} value={value}>
-            {label}
+        <div>
+          <Checkbox
+            checked={countriesSelected.length === 3}
+            onChange={handleSelectAllChange}
+          >
+            Select All
           </Checkbox>
-        ))}
-      </CheckboxGroup>
+          <CheckboxGroup
+            value={countriesSelected}
+            onValueChange={setCountriesSelected}
+          >
+            {countries.map(({ value, label }) => (
+              <Checkbox key={value} value={value}>
+                {label}
+              </Checkbox>
+            ))}
+          </CheckboxGroup>
+        </div>
+      </header>
     </div>
   );
 }
