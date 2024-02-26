@@ -1,8 +1,8 @@
 import { useState, type ChangeEvent } from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import { CheckboxGroup } from "./components/checkbox-group";
 import { Checkbox } from "./components/checkbox";
+import logo from "./logo.svg";
+import "./App.css";
 
 const countries = [
   {
@@ -18,12 +18,15 @@ const countries = [
     label: "France",
   },
 ];
+
+const allCountriesSelected = countries.map((c) => c.value);
+
 function App() {
   const [countriesSelected, setCountriesSelected] = useState<string[]>([]);
 
   const handleSelectAllChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setCountriesSelected(countries.map((c) => c.value));
+      setCountriesSelected(allCountriesSelected);
     } else {
       setCountriesSelected([]);
     }
@@ -35,7 +38,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <div>
           <Checkbox
-            checked={countriesSelected.length === 3}
+            checked={countriesSelected.length === countries.length}
             onChange={handleSelectAllChange}
           >
             Select All

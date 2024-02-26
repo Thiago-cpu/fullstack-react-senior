@@ -19,24 +19,31 @@ export function Checkbox({
   checked: checkedProp,
   children,
 }: CheckboxProps) {
+  const id = useId();
   const checkboxGroup = useCheckboxGroupContext();
   const isInGroup = !!checkboxGroup;
-  const id = useId();
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (isInGroup && value && checkboxGroup.onValueChange) {
-      const prevValue = checkboxGroup?.value ?? [];
+    if (
+      isInGroup &&
+      value &&
+      checkboxGroup.onValueChange &&
+      checkboxGroup.value
+    ) {
       if (e.target.checked) {
-        checkboxGroup.onValueChange([...prevValue, value]);
+        checkboxGroup.value.add(value);
       } else {
-        checkboxGroup.onValueChange(prevValue.filter((p) => p !== value));
+        checkboxGroup.value.delete(value);
       }
+      checkboxGroup.onValueChange(Array.from(checkboxGroup.value));
     }
     onChange?.(e);
   };
 
   const checked = isInGroup
-    ? checkboxGroup?.value?.some((v) => v === value)
+    ? !!value && checkboxGroup?.value?.has(value)
     : checkedProp;
+
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
       <input

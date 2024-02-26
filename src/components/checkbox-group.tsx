@@ -14,7 +14,7 @@ export function CheckboxGroup({
 }: CheckboxGroupProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <CheckboxGroupProvider value={{ onValueChange, value }}>
+      <CheckboxGroupProvider value={{ onValueChange, value: new Set(value) }}>
         {children}
       </CheckboxGroupProvider>
     </div>

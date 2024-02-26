@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 interface checkboxGroupContext {
-  value?: string[];
+  value?: Set<string>;
   onValueChange?: (value: string[]) => void;
 }
 
